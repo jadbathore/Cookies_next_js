@@ -2,7 +2,9 @@
 import { Button,Container,Text,useCheckbox,Drawer,Toggle} from "kitchn";
 import React from "react";
 import { hasCookie, setCookie } from 'cookies-next';
-
+/* 
+  tout l'element en une page client s'affiche pas si il n'y a pas de cookies a ce nom;
+*/
 export default function App() {
   const [checked, toggle] = useCheckbox();
   const [checked1, toggle1] = useCheckbox();
@@ -16,12 +18,14 @@ export default function App() {
     "marketing"
   ];
   
+  //object contenant tout les use status
   const command = [
     {bool:checked,toggle:toggle},
     {bool:checked1,toggle:toggle1},
     {bool:checked2,toggle:toggle2},
   ]
 
+  //creation des option du cache 
   cookieChoice.forEach((element,index)=>{
     const ContainerName = element + 'container';
     const TextName = element + 'Text';
@@ -36,6 +40,7 @@ export default function App() {
     )
   })
 
+  // verfication du de la presence du is submmited si c'est bon fait la popup sinon on ne montre rien 
   React.useEffect(() => {
     async function handleClick(){
       const exist =  await hasCookie('isSubmitted')
@@ -44,18 +49,20 @@ export default function App() {
     handleClick()  
   }, [cookiescheck])
 
+//a la fin de l'annnimation fait commun un formulaire une fois que l'annimation de drawer est fini j'envoie cette actions qui crée les cookies
 const cookiesHandler = ()=>{
       for(let i =0;i<command.length;i++)
       {
         setCookie(cookieChoice[i],command[i].bool,{sameSite:"none",secure:true});
       }
   }
-  const handleSubmit = () =>{
-    setCookie('isSubmitted',true,{sameSite:"none",secure:true})
-    setActive(!active)
-  } 
 
-  console.log(cookiescheck)
+// je gere le submit dans un premier temps cela va fermer le drawer 
+const handleSubmit = () =>{
+  setCookie('isSubmitted',true,{sameSite:"none",secure:true})
+  setActive(!active)
+} 
+      
       if(cookiescheck == true)
       {
         return (
